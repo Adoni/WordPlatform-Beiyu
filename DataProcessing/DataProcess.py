@@ -5,11 +5,11 @@ import subprocess
 DATA_DIR='/mnt/data1/zzllzy/'
 def raw_data_to_date_sorted_data():
     raw_data_file=open(DATA_DIR+'data')
-    pos_tags=['/d','/a','/n','/v','/u','/r','/w','/iv','/nz']
-    for l in raw_data_file:
-        line=line.replace('\n','').line.split('\t\t')
+    pos_tags=['/d','/a','/n','/v','/u','/r','/w','/iv','/nz','/t','/b','/p']
+    for line in raw_data_file:
+        line=line.replace('\n','').split('\t\t')
         date=line[1].split('-')
-        content=date[2]
+        content=line[2]
         for pos_tag in pos_tags:
             content=content.replace(pos_tag,'')
         print content
