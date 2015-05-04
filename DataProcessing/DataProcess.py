@@ -5,11 +5,14 @@ import subprocess
 DATA_DIR='/mnt/data1/zzllzy/'
 def raw_data_to_date_sorted_data():
     raw_data_file=open(DATA_DIR+'data')
-    i=0
+    pos_tags=['/d','/a','/n','/v','/u','/r','/w','/iv','/nz']
     for l in raw_data_file:
-        i+=1
-        if i%1000==0:
-            print i
+        line=line.replace('\n','').line.split('\t\t')
+        date=line[1].split('-')
+        content=date[2]
+        for pos_tag in pos_tags:
+            content=content.replace(pos_tag,'')
+        print content
 
 def get_word_vectors_from_file(word_vector_file):
     f = open(word_vector_file)
