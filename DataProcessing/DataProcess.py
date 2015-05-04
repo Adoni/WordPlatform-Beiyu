@@ -3,6 +3,8 @@ import numpy
 import subprocess
 
 DATA_DIR='/mnt/data1/zzllzy/'
+DATE_SORTED_DATA_DIR='/mnt/data1/adoni/date_sorted_data/'
+SEMANTIC_WORD_VECTORS_DIR='/mnt/data1/adoni/semantic_word_vectors/'
 def get_pos_tags_from_raw_file():
     import re
     raw_data_file=open(DATA_DIR+'data')
@@ -23,15 +25,20 @@ def get_pos_tags_from_raw_file():
 def raw_data_to_date_sorted_data():
     raw_data_file=open(DATA_DIR+'data')
     pos_tags=open('./postags.data').readlines()[0].split(' ')
+    files={}
     for line in raw_data_file:
         line=line.replace('\n','').split('\t\t')
         date=line[1].split('-')
-        print date
         content=line[2]
         for pos_tag in pos_tags:
             content=content.replace(pos_tag+' ',' ')
         for pos_tag in pos_tags:
             content=content.replace(pos_tag,'')
+        file_name=date[0]+'-'+date[1]+'.data'
+        try:
+            files[file_name].write(content+'\n')
+        except:
+            files[file_name]=open(DATE_SORTED_DATA_DIR+file_name,'w')
 
 
 def get_word_vectors_from_file(word_vector_file):
@@ -45,7 +52,7 @@ def get_word_vectors_from_file(word_vector_file):
 def date_sorted_data_to_word_vectors_file(start_time, end_time):
     file_names = []
     for i in range(start_time, end_time+1):
-        file_names.append(str(i)+'.txt')
+        file_names.append(str(i)+'.data')
     input_file = str(start_time)+'-'+str(end_time)+'.txt'
     command = 'cat '+' '.join(file_names)+' > '+input_file
     print command
