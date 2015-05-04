@@ -49,7 +49,7 @@ def get_word_vectors_from_file(word_vector_file):
         word_vectors[line[0]] = numpy.array(word_vectors[1:], dtype=numpy.float)
 
 
-def date_sorted_data_to_word_vectors_file(start_time, end_time):
+def date_sorted_data_to_word_vectors_file(start_year, start_month, end_year, end_time):
     file_names = []
     for i in range(start_time, end_time+1):
         file_names.append(str(i)+'.data')
@@ -64,6 +64,6 @@ def date_sorted_data_to_word_vectors_file(start_time, end_time):
 
 
 if __name__=='__main__':
-    #date_sorted_data_to_word_vectors_file(1,7)
-    raw_data_to_date_sorted_data()
+    date_sorted_data_to_word_vectors_file(2012,1,2012,7)
+    #raw_data_to_date_sorted_data()
     #get_pos_tags_from_raw_file()
