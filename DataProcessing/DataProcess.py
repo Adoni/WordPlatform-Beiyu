@@ -2,6 +2,14 @@ __author__ = 'sunxiaofei'
 import numpy
 import subprocess
 
+DATA_DIR='/mnt/data1/zzllzy/'
+def raw_data_to_date_sorted_data():
+    raw_data_file=open(DATA_DIR+'data')
+    i=0
+    for l in raw_data_file:
+        i+=1
+        if i%1000==0:
+            print i
 
 def get_word_vectors_from_file(word_vector_file):
     f = open(word_vector_file)
@@ -11,7 +19,7 @@ def get_word_vectors_from_file(word_vector_file):
         word_vectors[line[0]] = numpy.array(word_vectors[1:], dtype=numpy.float)
 
 
-def raw_data_to_word_vectors_file(start_time, end_time):
+def date_sorted_data_to_word_vectors_file(start_time, end_time):
     file_names = []
     for i in range(start_time, end_time+1):
         file_names.append(str(i)+'.txt')
@@ -26,4 +34,5 @@ def raw_data_to_word_vectors_file(start_time, end_time):
 
 
 if __name__=='__main__':
-    raw_data_to_word_vectors_file(1,7)
+    #date_sorted_data_to_word_vectors_file(1,7)
+    raw_data_to_date_sorted_data()
