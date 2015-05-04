@@ -10,24 +10,28 @@ def get_pos_tags_from_raw_file():
     pos_tags=set()
     for line in raw_data_file:
         i+=1
-        if i>100:
+        if i>1000:
             break
-        p=re.compile(r'/[a-z,A-Z]')
+        p=re.compile(r'/[a-z,A-Z]+')
         for pos_tag in p.findall(line):
             pos_tags.add(pos_tag)
         print len(pos_tags)
+    open('./postags.data','w').write(' '.join(pos_tags))
+    raw_data_file.close()
 
 
 def raw_data_to_date_sorted_data():
     raw_data_file=open(DATA_DIR+'data')
-    pos_tags=['/d','/a','/n','/v','/u','/r','/w','/iv','/nz','/t','/b','/p']
+    pos_tags=open('./postags.data').readlines()[0].split(' ')
     for line in raw_data_file:
         line=line.replace('\n','').split('\t\t')
         date=line[1].split('-')
+        print date
         content=line[2]
         for pos_tag in pos_tags:
+            content=content.replace(pos_tag+' ',' ')
+        for pos_tag in pos_tags:
             content=content.replace(pos_tag,'')
-        print content
 
 
 def get_word_vectors_from_file(word_vector_file):
@@ -54,5 +58,5 @@ def date_sorted_data_to_word_vectors_file(start_time, end_time):
 
 if __name__=='__main__':
     #date_sorted_data_to_word_vectors_file(1,7)
-    #raw_data_to_date_sorted_data()
-    get_pos_tags_from_raw_file()
+    raw_data_to_date_sorted_data()
+    #get_pos_tags_from_raw_file()
