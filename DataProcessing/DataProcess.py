@@ -1,6 +1,6 @@
 __author__ = 'sunxiaofei'
 import numpy
-import subprocess
+import os
 
 DATA_DIR='/mnt/data1/zzllzy/'
 DATE_SORTED_DATA_DIR='/mnt/data1/adoni/date_sorted_data/'
@@ -49,21 +49,39 @@ def get_word_vectors_from_file(word_vector_file):
         word_vectors[line[0]] = numpy.array(word_vectors[1:], dtype=numpy.float)
 
 
-def date_sorted_data_to_word_vectors_file(start_year, start_month, end_year, end_time):
-    file_names = []
-    for i in range(start_time, end_time+1):
-        file_names.append(str(i)+'.data')
-    input_file = str(start_time)+'-'+str(end_time)+'.txt'
+def get_file_names_in_range(start_year, start_month, end_year, end_month):
+    file_names=[]
+    if start_year>end_year:
+        raise Exception('Time range is illegal')
+    if start_year==end_year and start_month>end_month:
+        raise Exception('Time range is illegal')
+    if start_year==end_year:
+        for m in range(start_month, end_month+1):
+            file_names.append(DATE_SORTED_DATA_DIR+str(start_year)+'-'+str(m)+'.data')
+        return file_names
+    if start_year<end_year:
+        for m in range(start_month, 12+1):
+            file_names.append(DATE_SORTED_DATA_DIR+str(start_year)+'-'+str(m)+'.data')
+        for y in range(start_year+1,end_year):
+            for m in range(1,12+1):
+                file_names.append(DATE_SORTED_DATA_DIR+str(y)+'-'+str(m)+'.data')
+        for m in range(1, end_month+1):
+            file_names.append(DATE_SORTED_DATA_DIR+str(end_year)+'-'+str(m)+'.data')
+        return file_names
+
+
+def date_sorted_data_to_word_vectors_file(start_year, start_month, end_year, end_month):
+    file_names = get_file_names_in_range(start_year,start_month,end_year,end_month)
+    input_file = SEMANTIC_WORD_VECTORS_DIR+str(start_year)+'-'+str(start_month)+'-'+str(end_year)+'-'+str(end_month)+'.data'
     command = 'cat '+' '.join(file_names)+' > '+input_file
-    print command
-    subprocess.call(command)
-    output_file = input_file.replace('.txt', '.vec')
-    command = './word2vec -train '+input_file+' -output '+output_file\
-              + ' -cbow 0 -size 200 -window 7 -negative 0 -hs 1 -sample 1e-3 -threads 12 -binary 0'
-    subprocess.call(command)
+    #os.system(command)
+    output_file = input_file.replace('.data', '.vec')
+    command = '~/word2vec/word2vec -train '+input_file+' -output '+output_file\
+              + ' -cbow 0 -size 50 -window 7 -negative 0 -hs 1 -sample 1e-3 -threads 12 -binary 0'
+    os.system(command)
 
 
 if __name__=='__main__':
-    date_sorted_data_to_word_vectors_file(2012,1,2012,7)
+    date_sorted_data_to_word_vectors_file(2012,1,2012,2)
     #raw_data_to_date_sorted_data()
     #get_pos_tags_from_raw_file()
