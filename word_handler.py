@@ -21,6 +21,7 @@ class word_handler:
             if date not in self.embeddings:
                 self.add_embedding_file(date)
             closest_words.append(self.embeddings[date].get_closest_words(word))
+        return closest_words
 
 if __name__=='__main__':
     handler=word_handler()
