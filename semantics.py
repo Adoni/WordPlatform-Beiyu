@@ -5,7 +5,7 @@ handler=word_handler()
 
 class semantics_index:
     def GET(self):
-        dates=[2005,2006,2007,2008]
+        dates=[2005,2006,2007,2008,2009,2010,2011,2012]
         return render.semantics_index(dates=dates)
 
 class semantics_show:
@@ -18,7 +18,11 @@ class semantics_show:
         for p in params:
             if params[p]=='on':
                 dates.append(p)
+        dates=map(lambda d:int(d),dates)
+        dates=sorted(dates)
+        dates=map(lambda d:str(d),dates)
         words=handler.get_closest_words(dates,word)
+        print words
         words=zip(dates,words)
-        dates=[2005,2006,2007,2008]
-        return render.semantics_index(dates=dates,words=words)
+        dates=[2005,2006,2007,2008,2009,2010,2011,2012]
+        return render.semantics_show(dates=dates,words=words)
