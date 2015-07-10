@@ -23,7 +23,7 @@ class semantics_show:
         checked_dates=map(lambda d:str(d),checked_dates)
         deliver=Deliver()
         words=deliver.get_closest_words(checked_dates,word)
-        batch_distant=get_batch_distant(checked_dates,word)
+        batch_distant,json_format_distant=get_batch_distant(checked_dates,word)
         words=dict(zip(checked_dates,words))
         dates=[2005,2006,2007,2008,2009,2010,2011,2012]
         dates=map(lambda date:str(date),dates)
@@ -33,4 +33,5 @@ class semantics_show:
                 word=word,
                 words=words,
                 batch_distant=batch_distant,
+                json_format_distant=json_format_distant,
                 )

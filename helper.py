@@ -2,6 +2,7 @@
 from deliver import Deliver
 from sklearn.cluster import AffinityPropagation
 import numpy
+import json
 
 deliver=Deliver()
 
@@ -45,7 +46,8 @@ def get_batch_distant(dates,word):
         meaning=get_word_meaning(date,word)
         dist=get_distance(date,word,meaning)
         batch_distant[date]=zip(map(lambda m:map(lambda mm:mm[0],m['words']),meaning),dist)
-    return batch_distant
+    json_format_distant=json.dumps(batch_distant)
+    return batch_distant,json_format_distant
 
 if __name__=='__main__':
     word=u'小米'
