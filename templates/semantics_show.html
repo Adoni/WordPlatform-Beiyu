@@ -58,4 +58,30 @@ $def with (dates,word,words,checked_dates)
       <div class="two wide column"></div>
     </div>
   </div>
+
+  <div class="ui grid">
+    <div class="two wide column"></div>
+    <div class="one wide column">
+      <div class="ui compact vertical labeled menu">
+        <a class="item"> Games </a>
+        <a class="item"> Channels </a>
+        <a class="item"> Videos </a>
+      </div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="ten wide column">
+      <div class="ui segment" id="year_content">
+        This is an stretched grid column. This segment will always match the tab height
+      </div>
+    </div>
+    <div class="two wide column"></div>
+  </div>
 </div>
+<script type="text/javascript">
+  $$('.ui.menu')
+    .on('click', '.item', function() {
+        $$(this).addClass('active').siblings('.item').removeClass('active');
+        var year=$$(this).text()
+        $$("#year_content").append(year);
+    });
+</script>
