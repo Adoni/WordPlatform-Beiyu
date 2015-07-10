@@ -52,4 +52,4 @@ def get_batch_distant(dates,word):
 if __name__=='__main__':
     word=u'小米'
     word=u'第三者'
-    print get_batch_distant([2005,2010],word)
+    print [get_batch_distant([2005,2010],word)[1]]
