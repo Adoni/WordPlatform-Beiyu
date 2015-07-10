@@ -1,4 +1,4 @@
-$def with (dates,words)
+$def with (dates,word,words,checked_dates)
 </br>
 </br>
 </br>
@@ -18,7 +18,10 @@ $def with (dates,words)
             $for date in dates:
               <div class="column">
                 <div class="ui toggle checkbox">
-                  <input type="checkbox" checked="checked" id="$date" name="$date">
+                  $if date in checked_dates:
+                    <input type="checkbox" checked="checked" id="$date" name="$date">
+                  $else:
+                    <input type="checkbox" id="$date" name="$date">
                   <label for="$date">$date</label>
                 </div>
               </div>
@@ -30,7 +33,7 @@ $def with (dates,words)
 
     <h4 class="ui horizontal header divider">
       <i class="bar chart icon"></i>
-      Specifications
+      $word
     </h4>
 
     <div class="ui grid">

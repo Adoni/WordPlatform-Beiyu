@@ -13,6 +13,7 @@ class word_handler:
 
     def add_embedding_file(self, date):
         print 'Add embedding file of %s'%date
+        date=str(date)
         if '-' in date:
             year=date.split('-')[0]
             month=date.split('-')[1]
@@ -20,19 +21,28 @@ class word_handler:
         else:
             year=date
             embedding_file_name="%s/%s/%s-embedding.data"%(Embedding_Dir,year,year)
-            self.embeddings[date]=simple_embedding_cluster_viewer(embedding_file_name,'utf8')
+        self.embeddings[date]=simple_embedding_cluster_viewer(embedding_file_name,'utf8')
 
     def get_closest_words(self, dates, word, count=10):
         closest_words=[]
         for date in dates:
+            date=str(date)
             if date not in self.embeddings:
-                self.add_embedding_file(date)
+                try:
+                    self.add_embedding_file(date)
+                except:
+                    closest_words.append([])
+                    continue
             closest_words.append(self.embeddings[date].get_closest_words(word))
         return closest_words
 
     def get_word_embedding(self,date,word):
+        date=str(date)
         if date not in self.embeddings:
-            self.add_embedding_file(date)
+            try:
+                self.add_embedding_file(date)
+            except:
+                return 'None'
         return self.embeddings[date][word]
 
 
@@ -45,6 +55,8 @@ def on_request(ch, method, props, body):
     if body['function'] is 'get_word_embedding':
         result=handler.get_word_embedding(body['date'],body['word'])
 
+    if result is None:
+        result='None'
     output_file=StringIO.StringIO()
     cPickle.dump(result, output_file)
     output_file.flush()
@@ -57,7 +69,7 @@ def on_request(ch, method, props, body):
 
 def initialize_handler():
     global handler
-    for year in range(2005,2006):
+    for year in range(2005,2013):
         handler.add_embedding_file(str(year))
 def main():
     global handler
