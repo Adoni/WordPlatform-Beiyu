@@ -1,4 +1,4 @@
-$def with (dates,word,words,checked_dates)
+$def with (dates,checked_dates,word,words,batch_distant)
 </br>
 </br>
 </br>
@@ -47,41 +47,66 @@ $def with (dates,word,words,checked_dates)
             </tr>
           </thead>
           <tbody>
-          $for word in words:
+          $for date in checked_dates:
             <tr>
-              <td>$word[0]</td>
-              <td>$' '.join(word[1])</td>
+              <td>$date</td>
+              <td>$' '.join(words[date])</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="two wide column"></div>
     </div>
+
+    <div class="ui grid">
+      <div class="two wide column"></div>
+      <div class="ui center aligned twelve wide column">
+        $for date in checked_dates:
+        $date
+          <table class="ui table">
+            <thead>
+              <tr>
+                <th>Meaning</th>
+                <th>Words</th>
+                <th>Distance</th>
+              </tr>
+            </thead>
+            <tbody>
+              $for index,m in enumerate(batch_distant[date]):
+                <tr>
+                  <td>$(index+1)</td>
+                  <td>$' '.join(m[0])</td>
+                  <td>$m[1]</td>
+                </tr>
+            </tbody>
+          </table>
+      </div>
+      <div class="two wide column"></div>
+    </div>
+
   </div>
+</div>
 
   <div class="ui grid">
     <div class="two wide column"></div>
     <div class="one wide column">
       <div class="ui compact vertical labeled menu">
-        <a class="item"> Games </a>
-        <a class="item"> Channels </a>
-        <a class="item"> Videos </a>
+        $for date in checked_dates:
+          <a class="item">$date </a>
       </div>
     </div>
     <div class="one wide column"></div>
     <div class="ten wide column">
-      <div class="ui segment" id="year_content">
-        This is an stretched grid column. This segment will always match the tab height
+      <div class="ui segment">
       </div>
     </div>
     <div class="two wide column"></div>
   </div>
-</div>
+
 <script type="text/javascript">
   $$('.ui.menu')
     .on('click', '.item', function() {
         $$(this).addClass('active').siblings('.item').removeClass('active');
-        var year=$$(this).text()
-        $$("#year_content").append(year);
+        var date=$$(this).text()
     });
 </script>
