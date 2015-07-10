@@ -108,6 +108,7 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
     .on('click', '.item', function() {
         $$(this).addClass('active').siblings('.item').removeClass('active');
         var date=$$(this).text()
+        show(date)
     });
 </script>
 
@@ -120,7 +121,7 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
                 echarts: 'http://echarts.baidu.com/build/dist'
             }
         });
-        
+  function show(date){ 
         // 使用
         require(
             [
@@ -162,4 +163,5 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
                 myChart.setOption(option); 
             }
         );
+      }
 </script>
