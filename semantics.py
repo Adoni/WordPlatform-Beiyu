@@ -2,6 +2,7 @@ import web
 render = web.template.render('templates/',base='layout')
 from deliver import Deliver
 from helper import get_batch_distant
+import json
 
 class semantics_index:
     def GET(self):

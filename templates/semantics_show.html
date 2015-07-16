@@ -89,18 +89,18 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
 
   <div class="ui grid">
     <div class="two wide column"></div>
+    <div class="one wide column"></div>
     <div class="one wide column">
       <div class="ui compact vertical labeled menu">
         $for date in checked_dates:
-          <a class="item">$date </a>
+          <a class="item">$date</a>
       </div>
     </div>
-    <div class="one wide column"></div>
-    <div class="ten wide column">
-      <div class="ui segment">
+    <div class="nine wide column">
+      <div id="main" class="ui segment" style="height:400px">
       </div>
     </div>
-    <div class="two wide column"></div>
+    <div class="three wide column"></div>
   </div>
 
 <script type="text/javascript">
@@ -112,10 +112,8 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
     });
 </script>
 
-<div id="main" style="height:400px"></div>
 <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
 <script type="text/javascript">
-  all_data=$:json_format_distant
   require.config({
             paths: {
                 echarts: 'http://echarts.baidu.com/build/dist'
@@ -126,23 +124,25 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
         require(
             [
                 'echarts',
-                'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/pie' // 使用柱状图就加载bar模块，按需加载
             ],
             function (ec) {
                 // 基于准备好的dom，初始化echarts图表
-                var myChart = ec.init(document.getElementById('main')); 
+                  all_data=$:json_format_distant
+
+                var myObj = { 'name':'大师傅','age':28 };
+                var myChart = ec.init(document.getElementById('main'));
                 var meaning=[]
                 for (var i=0;i<all_data[date].length;i++){
-                  meaning.push("词义"+i)
+                  meaning.push(all_data[date][i][0].slice(0,3))
                 }
                 var meaning_data=[]
                 for (var i=0;i<all_data[date].length;i++){
-                  meaning.push({value:all_data[date][i][1], name:all_data[date][i][0]})
+                  meaning_data.push({value:all_data[date][i][1], name:all_data[date][i][0].slice(0,3)})
                 }
                 var option = {
                   title : {
                       text: '$date 词义',
-                      subtext: '纯属虚构',
                       x:'center'
                   },
                   tooltip : {
@@ -186,8 +186,6 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
                       }
                   ]
               };
-                    
-        
                 // 为echarts对象加载数据 
                 myChart.setOption(option); 
             }
