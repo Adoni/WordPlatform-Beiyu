@@ -4,6 +4,7 @@ from deliver import Deliver
 from helper import get_batch_distant
 import json
 
+deliver=Deliver()
 class semantics_index:
     def GET(self):
         dates=[2005,2006,2007,2008,2009,2010,2011,2012]
@@ -22,7 +23,6 @@ class semantics_show:
         checked_dates=map(lambda d:int(d),checked_dates)
         checked_dates=sorted(checked_dates)
         checked_dates=map(lambda d:str(d),checked_dates)
-        deliver=Deliver()
         words=deliver.get_closest_words(checked_dates,word)
         batch_distant,json_format_distant=get_batch_distant(checked_dates,word)
         words=dict(zip(checked_dates,words))
