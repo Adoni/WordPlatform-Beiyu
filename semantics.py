@@ -26,6 +26,8 @@ class semantics_show:
         checked_dates=filter(lambda d:not deliver.get_word_embedding(d,word) is None,checked_dates)
         words=deliver.get_closest_words(checked_dates,word)
         batch_distant,json_format_distant=get_batch_distant(checked_dates,word)
+        if batch_distant is None:
+            return render.error(info='None')
         words=dict(zip(checked_dates,words))
         dates=[2005,2006,2007,2008,2009,2010,2011,2012]
         dates=map(lambda date:str(date),dates)

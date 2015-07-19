@@ -22,10 +22,11 @@ def get_word_meaning(date,word):
     closest_words=filter(lambda w:not w[1] is None,closest_words)
     closest_words=filter(lambda w:not w[1]=='None',closest_words)
     X=numpy.array(map(lambda w:w[1],closest_words))
-    print X.shape
-    af = AffinityPropagation(preference=-25).fit(X)
+    af = AffinityPropagation(preference=-30).fit(X)
     labels = af.labels_
     meaning=dict()
+    if True in numpy.isnan(labels):
+        return None
     for index,label in enumerate(labels):
         if label not in meaning:
             meaning[label]={
@@ -48,6 +49,8 @@ def get_batch_distant(dates,word):
     batch_distant=dict()
     for date in dates:
         meaning=get_word_meaning(date,word)
+        if meaning is None:
+            return None,''
         dist=get_distance(date,word,meaning)
         batch_distant[date]=zip(map(lambda m:map(lambda mm:mm[0],m['words']),meaning),dist)
     json_format_distant=json.dumps(batch_distant)
@@ -56,4 +59,4 @@ def get_batch_distant(dates,word):
 if __name__=='__main__':
     word=u'小米'
     #word=u'第三者'
-    print [get_batch_distant([2005,2007],word)[1]]
+    print [get_batch_distant([2005,2009,2010],word)[1]]

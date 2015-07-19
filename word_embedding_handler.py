@@ -2,6 +2,7 @@
 #coding=utf8
 import pika
 import pickle
+from pymongo import MongoClient
 from my_vector_reader import simple_embedding_cluster_viewer
 from settings import Embedding_Dir
 from settings import QUEUE_NAME
@@ -11,6 +12,7 @@ from rpyc.utils.server import ThreadedServer
 class word_handler():
     def __init__(self):
         self.embeddings=dict()
+        self.closest_words_db=MongoClient().word_platform.closest_words
 
     def add_embedding_file(self, date):
         print 'Add embedding file of %s'%date
@@ -26,6 +28,8 @@ class word_handler():
         print 'Done'
 
     def get_closest_words(self, dates, word, count=10):
+        if type(word)==unicode:
+            word=word.encode('utf8')
         closest_words=[]
         for date in dates:
             date=str(date)
@@ -35,7 +39,13 @@ class word_handler():
                 except:
                     closest_words.append([])
                     continue
-            closest_words.append(self.embeddings[date].get_closest_words(word))
+            date_closest_words=self.closest_words_db.find_one({'_id':'%s %s'%(word,date)})
+            if date_closest_words is None:
+                date_closest_words=self.embeddings[date].get_closest_words(word,count=20)
+                self.closest_words_db.insert({'_id':'%s %s'%(word,date),'closest_words':date_closest_words})
+            else:
+                date_closest_words=date_closest_words['closest_words']
+            closest_words.append(date_closest_words[:count])
         return pickle.dumps(closest_words)
 
     def get_word_embedding(self,date,word):
