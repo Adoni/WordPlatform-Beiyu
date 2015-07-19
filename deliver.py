@@ -3,18 +3,21 @@
 import pika
 import settings
 import uuid
-import cPickle
+import pickle
 import StringIO
+import rpyc
 
 class Deliver(object):
     def __init__(self):
         self.conn=rpyc.connect('localhost',22222)
 
     def get_closest_words(self,dates,word):
-        return self.conn.get_closest_words(dates,word)
+        result=self.conn.root.get_closest_words(dates,word)
+        return pickle.loads(result)
 
     def get_word_embedding(self,date,word):
-        return self.conn.get_word_embedding(date,word)
+        result=self.conn.root.get_word_embedding(date,word)
+        return pickle.loads(result)
 
 if __name__=='__main__':
     deliver=Deliver()

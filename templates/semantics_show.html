@@ -58,32 +58,6 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
       <div class="two wide column"></div>
     </div>
 
-    <div class="ui grid">
-      <div class="two wide column"></div>
-      <div class="ui center aligned twelve wide column">
-        $for date in checked_dates:
-        $date
-          <table class="ui table">
-            <thead>
-              <tr>
-                <th>Meaning</th>
-                <th>Words</th>
-                <th>Distance</th>
-              </tr>
-            </thead>
-            <tbody>
-              $for index,m in enumerate(batch_distant[date]):
-                <tr>
-                  <td>$(index+1)</td>
-                  <td>$' '.join(m[0])</td>
-                  <td>$m[1]</td>
-                </tr>
-            </tbody>
-          </table>
-      </div>
-      <div class="two wide column"></div>
-    </div>
-
   </div>
 </div>
 
@@ -93,7 +67,7 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
     <div class="one wide column">
       <div class="ui compact vertical labeled menu">
         $for date in checked_dates:
-          <a class="item">$date</a>
+          <a class="item" id='button_$date'>$date</a>
       </div>
     </div>
     <div class="nine wide column">
@@ -134,7 +108,7 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
                 var myChart = ec.init(document.getElementById('main'));
                 var meaning=[]
                 for (var i=0;i<all_data[date].length;i++){
-                  meaning.push(all_data[date][i][0].slice(0,3))
+                  meaning.push(all_data[date][i][0].slice(0,4))
                 }
                 var meaning_data=[]
                 for (var i=0;i<all_data[date].length;i++){
@@ -191,4 +165,10 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
             }
         );
       }
+</script>
+
+
+<script>
+  var btn = document.getElementById('button_$checked_dates[0]');
+  btn.click();
 </script>

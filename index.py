@@ -5,6 +5,11 @@ import web
 from semantics import semantics_index
 from semantics import semantics_show
 
+import os
+home=''
+os.environ["SCRIPT_NAME"] = home
+os.environ["REAL_SCRIPT_NAME"] = home
+
 urls = (
     "/", "hello",
     "/semantics", "semantics_index",

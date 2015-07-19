@@ -12,7 +12,7 @@ class semantics_index:
 
 class semantics_show:
     def GET(self):
-        return 'Semantics show'
+        raise web.seeother('/semantics')
     def POST(self):
         params = web.input()
         word=params['word']
@@ -23,6 +23,7 @@ class semantics_show:
         checked_dates=map(lambda d:int(d),checked_dates)
         checked_dates=sorted(checked_dates)
         checked_dates=map(lambda d:str(d),checked_dates)
+        checked_dates=filter(lambda d:not deliver.get_word_embedding(d,word) is None,checked_dates)
         words=deliver.get_closest_words(checked_dates,word)
         batch_distant,json_format_distant=get_batch_distant(checked_dates,word)
         words=dict(zip(checked_dates,words))

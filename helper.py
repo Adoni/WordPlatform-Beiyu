@@ -19,9 +19,11 @@ def get_word_meaning(date,word):
         closest_words+=l
     closest_words=list(set(closest_words))
     closest_words=zip(closest_words,map(lambda w:deliver.get_word_embedding(date,w),closest_words))
+    closest_words=filter(lambda w:not w[1] is None,closest_words)
     closest_words=filter(lambda w:not w[1]=='None',closest_words)
     X=numpy.array(map(lambda w:w[1],closest_words))
-    af = AffinityPropagation(preference=-20).fit(X)
+    print X.shape
+    af = AffinityPropagation(preference=-25).fit(X)
     labels = af.labels_
     meaning=dict()
     for index,label in enumerate(labels):
@@ -37,7 +39,9 @@ def get_word_meaning(date,word):
 
 def get_distance(date,word,meaning):
     word_embedding=deliver.get_word_embedding(date,word)
-    dist=map(lambda m:distant(word_embedding,m['center']),meaning)
+    dist=map(lambda m:1.0/distant(word_embedding,m['center']),meaning)
+    dist_sum=sum(dist)
+    dist=map(lambda d:d/dist_sum,dist)
     return dist
 
 def get_batch_distant(dates,word):
@@ -51,5 +55,5 @@ def get_batch_distant(dates,word):
 
 if __name__=='__main__':
     word=u'小米'
-    word=u'第三者'
-    print [get_batch_distant([2005,2010],word)[1]]
+    #word=u'第三者'
+    print [get_batch_distant([2005,2007],word)[1]]
