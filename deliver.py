@@ -6,14 +6,27 @@ import uuid
 import pickle
 import StringIO
 import rpyc
+from search_word_list_by_collocation import collocation_search
 
 class Deliver(object):
     def __init__(self):
         self.conn=rpyc.connect('localhost',22222)
 
-    def get_closest_words(self,dates,word):
-        result=self.conn.root.get_closest_words(dates,word)
-        return pickle.loads(result)
+    def batch_collocation_search(self,word,dates,total_count=10):
+        result=[]
+        for date in dates:
+            result.append(collocation_search(word,int(date),total_count))
+        return result
+
+    def get_closest_words(self,dates,word,jointly_search=False):
+        result=pickle.loads(self.conn.root.get_closest_words(dates,word))
+        #if jointly_search:
+        if False:
+            collocation_result=self.batch_collocation_search(word,dates)
+            for i in xrange(len(result)):
+                result[i]=filter(lambda x:x not in collocation_result[i],result[i])
+
+        return result
 
     def get_word_embedding(self,date,word):
         result=self.conn.root.get_word_embedding(date,word)
@@ -21,4 +34,5 @@ class Deliver(object):
 
 if __name__=='__main__':
     deliver=Deliver()
-    print deliver.get_word_embedding('2005','hello')
+    print '======'
+    print ' '.join(deliver.get_closest_words(['2012'],'水')[0])

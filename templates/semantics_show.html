@@ -1,4 +1,4 @@
-$def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
+$def with (dates,checked_dates,word,words,batch_distant,json_format_distant,jointly_search,collocation_result,intersection)
 </br>
 </br>
 </br>
@@ -26,6 +26,15 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
                 </div>
               </div>
           </div>
+          <div class="ui four column center aligned stackable divided grid segment">
+            <div class="column">
+                <div class="ui toggle checkbox">
+                  <input type="checkbox" checked="checked" id="joint" name="joint">
+                  <label for="joint">联合</label>
+                </div>
+            </div>
+          </div>
+
         </form>
       </div>
       <div class="three wide column"></div>
@@ -57,6 +66,64 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
       </div>
       <div class="two wide column"></div>
     </div>
+
+    <h4 class="ui horizontal header divider">
+      <i class="bar chart icon"></i>
+      $word
+    </h4>
+
+    <div class="ui grid">
+      <div class="two wide column"></div>
+      <div class="ui center aligned twelve wide column">
+        <table class="ui table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Semantics</th>
+            </tr>
+          </thead>
+          <tbody>
+          $for date in checked_dates:
+            <tr>
+              <td>$date</td>
+              <td>$' '.join(collocation_result[date])</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="two wide column"></div>
+    </div>
+
+    <h4 class="ui horizontal header divider">
+      <i class="bar chart icon"></i>
+      $word
+    </h4>
+
+    <div class="ui grid">
+      <div class="two wide column"></div>
+      <div class="ui twelve wide column">
+        <table class="ui table">
+          <thead>
+            <tr>
+              <th class="collapsing">Date</th>
+              <th>Semantics</th>
+            </tr>
+          </thead>
+          <tbody>
+          $for date in checked_dates:
+            <tr>
+              <td class="collapsing">$date</td>
+              $if intersection[date]==[]:
+                <td>空</td>
+              $else:
+                <td>$' '.join(intersection[date])</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="two wide column"></div>
+    </div>
+
 
   </div>
 </div>
@@ -112,7 +179,7 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant)
                 }
                 var meaning_data=[]
                 for (var i=0;i<all_data[date].length;i++){
-                  meaning_data.push({value:all_data[date][i][1], name:all_data[date][i][0].slice(0,3)})
+                  meaning_data.push({value:all_data[date][i][1], name:all_data[date][i][0].slice(0,4)})
                 }
                 var option = {
                   title : {

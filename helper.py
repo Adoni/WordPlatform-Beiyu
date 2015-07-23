@@ -14,9 +14,11 @@ def distant(a,b):
 def get_word_meaning(date,word):
     dates=range(2005,int(date)+1)
     list_words=deliver.get_closest_words(dates,word)
+    list_words=filter(lambda l:len(l)>0, list_words)
     closest_words=[]
-    for l in list_words:
-        closest_words+=l
+    for i in xrange(len(list_words[0])):
+        for l in list_words:
+            closest_words.append(l[i])
     closest_words=list(set(closest_words))
     closest_words=zip(closest_words,map(lambda w:deliver.get_word_embedding(date,w),closest_words))
     closest_words=filter(lambda w:not w[1] is None,closest_words)

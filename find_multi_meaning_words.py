@@ -19,8 +19,7 @@ def find_multi_meaning_words():
             continue
         meaning=meaning['2012']
         if len(meaning)>1:
-            fout.write(w+'\n')
-            print w
+            fout.write("%s %d\n"%(w,len(meaning)))
         bar.draw(index)
 
 if __name__=='__main__':
