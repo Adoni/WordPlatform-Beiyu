@@ -7,6 +7,8 @@ import json
 deliver=Deliver()
 
 def distant(a,b):
+    a=numpy.array(a)
+    b=numpy.array(b)
     dist=numpy.linalg.norm(a-b)
     #dist=1.0/(1.0+dist)
     return dist
@@ -38,27 +40,69 @@ def get_word_meaning(date,word):
         meaning[label]['words'].append(closest_words[index])
     for label in meaning:
         meaning[label]['center']=numpy.mean(map(lambda d:d[1],meaning[label]['words']),axis=0)
-    return meaning.values()
+    #return meaning.values()
+    result=[]
+    for m in meaning.values():
+        result.append(map(lambda w:w[0],m['words']))
+    return result
+
+def get_center(date,meaning):
+    embedding=[]
+    count=0
+    for w in meaning:
+        e=deliver.get_word_embedding(date,w)
+        if e is None:
+            continue
+        embedding.append(e)
+        count+=1
+    center=numpy.mean(embedding,axis=0)
+    return center,count
 
 def get_distance(date,word,meaning):
     word_embedding=deliver.get_word_embedding(date,word)
-    dist=map(lambda m:1.0/distant(word_embedding,m['center']),meaning)
+    closest_word=deliver.get_closest_words([date],word)[0][0]
+    min_distant=distant(word_embedding,deliver.get_word_embedding(date,closest_word))
+    #dist=map(lambda m:1.0/distant(word_embedding,m['center']),meaning)
+    #dist=map(lambda m:1.0/distant(word_embedding,get_center(date,m)),meaning)
+    dist=[]
+    for m in meaning:
+        center,count=get_center(date,m)
+        d=distant(word_embedding,center)
+        d=abs(d-min_distant)
+        d=1.0/d*count
+        dist.append(d)
+    #dist=map(lambda m:1.0/distant(word_embedding,get_center(date,m)),meaning)
     dist_sum=sum(dist)
     dist=map(lambda d:d/dist_sum,dist)
     return dist
 
 def get_batch_distant(dates,word):
     batch_distant=dict()
+    meaning=get_word_meaning(2012,word)
+    if meaning is None:
+        return None,''
     for date in dates:
-        meaning=get_word_meaning(date,word)
-        if meaning is None:
-            return None,''
+        #meaning=get_word_meaning(date,word)
+        #if meaning is None:
+        #    return None,''
         dist=get_distance(date,word,meaning)
-        batch_distant[date]=zip(map(lambda m:map(lambda mm:mm[0],m['words']),meaning),dist)
-    json_format_distant=json.dumps(batch_distant)
-    return batch_distant,json_format_distant
+        #print dist
+        batch_distant[date]=zip(meaning,dist)
+    return batch_distant,meaning
 
-if __name__=='__main__':
+def transfer_to_json(batch_distant):
+    json_format_distant=json.dumps(batch_distant)
+    return json_format_distant
+
+def transfer_to_line(batch_distant):
+    meaning=batch_distant[0].keys()
+    json_format_distant=json.dumps(batch_distant)
+    return json_format_distant
+
+def test():
     word=u'小米'
     #word=u'第三者'
-    print [get_batch_distant([2005,2009,2010],word)[1]]
+    print get_batch_distant([2012],word)[2]
+
+if __name__=='__main__':
+    test()

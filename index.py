@@ -11,7 +11,7 @@ os.environ["SCRIPT_NAME"] = home
 os.environ["REAL_SCRIPT_NAME"] = home
 
 urls = (
-    "/", "hello",
+    "/", "semantics_index",
     "/semantics", "semantics_index",
     "/semantics/show", "semantics_show",
     )
