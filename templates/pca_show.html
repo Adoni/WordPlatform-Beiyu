@@ -1,0 +1,64 @@
+$def with(dates,checked_dates,html_fig)
+</br>
+</br>
+</br>
+</br>
+<div class="ui page padded grid">
+  <div class="column">
+    <div class="ui grid">
+      <div class="three wide column"></div>
+      <div class="ui center aligned ten wide column">
+        <h1 class="ui header">词义检索</h1>
+        <form class="ui form" action="/semantics/show" method="post">
+          <div class="ui fluid huge icon input">
+            <input type="text" name="word" placeholder="Word...">
+            <i class="search icon"></i>
+          </div>
+          <div class="ui four column center aligned stackable divided grid segment">
+            $for date in dates:
+              <div class="column">
+                <div class="ui toggle checkbox">
+                  $if date in checked_dates:
+                    <input type="checkbox" checked="checked" id="$date" name="$date">
+                  $else:
+                    <input type="checkbox" id="$date" name="$date">
+                  <label for="$date">$date</label>
+                </div>
+              </div>
+          </div>
+          <div class="ui four column center aligned stackable divided grid segment">
+            <div class="column">
+                <div class="ui toggle checkbox">
+                  <input type="checkbox" checked="checked" id="joint" name="joint">
+                  <label for="joint">联合</label>
+                </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="three wide column"></div>
+    </div>
+
+    <h4 class="ui horizontal header divider">
+      <i class="bar chart icon"></i>
+      $word
+    </h4>
+  </div>
+</div>
+
+  <div class="ui grid">
+    <div class="two wide column"></div>
+    <div class="one wide column"></div>
+    <div class="one wide column">
+      <div class="ui compact vertical labeled menu">
+        $for date in checked_dates:
+          <a class="item" id='button_$date'>$date</a>
+      </div>
+    </div>
+    <div class="nine wide column">
+      <div id="main" class="ui segment" style="height:400px">
+      </div>
+    </div>
+    <div class="three wide column"></div>
+  </div>
