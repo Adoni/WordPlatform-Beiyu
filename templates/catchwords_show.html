@@ -1,0 +1,100 @@
+$def with (dates,word,distribute)
+</br>
+</br>
+</br>
+</br>
+<div class="ui page padded grid">
+  <div class="column">
+    <div class="ui grid">
+      <div class="three wide column"></div>
+      <div class="ui center aligned ten wide column">
+        <h1 class="ui header">流行语检索</h1>
+        <form class="ui form" action="/catchwords/show" method="post">
+          <div class="ui fluid huge icon input">
+            <input type="text" name="word" placeholder="Word...">
+            <i class="search icon"></i>
+          </div>
+        </form>
+      </div>
+      <div class="three wide column"></div>
+    </div>
+
+    <h4 class="ui horizontal header divider">
+      <i class="bar chart icon"></i>
+      $word
+    </h4>
+
+    <div class="ui grid">
+      <div class="two wide column"></div>
+        <div class="twelve wide column">
+          <div id="main" class="ui segment" style="height:400px">
+        </div>
+      </div>
+      <div class="two wide column"></div>
+    </div>
+
+<script src="http://echarts.baidu.com/build/dist/echarts.js" charset="UTF-8"></script>
+<script type="text/javascript" charset="UTF-8">
+  require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+  require(
+      [
+          'echarts',
+          'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+      ],
+      function (ec) {
+          // 基于准备好的dom，初始化echarts图表
+          var myChart = ec.init(document.getElementById('main'));
+          var option = {
+            title : {
+                text: '$word',
+                subtext: '历年分布'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['TF','DF']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : $:dates
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+              $for key in distribute:
+                {
+                    name:'$key',
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:$:distribute[key]
+                },
+            ]
+        };
+        // 为echarts对象加载数据
+        myChart.setOption(option);
+      }
+  );
+</script>

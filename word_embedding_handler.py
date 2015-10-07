@@ -70,6 +70,7 @@ global handler
 def main():
     global handler
     handler=word_handler()
+    handler.add_embedding_file('all')
     for date in xrange(2005,2013):
         handler.add_embedding_file(date)
     sr=ThreadedServer(Listener,port=22222,auto_register=False)

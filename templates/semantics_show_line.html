@@ -1,4 +1,4 @@
-$def with (dates,checked_dates,word,words,batch_distant,json_format_distant,jointly_search,collocation_result,intersection)
+$def with (dates,checked_dates,word,words,batch_distant,json_format_distant,jointly_search,collocation_result,intersection,str_short_meaning,short_meaning,distribute)
 </br>
 </br>
 </br>
@@ -93,26 +93,18 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant,join
       </div>
       <div class="two wide column"></div>
     </div>
-</div>
 
-<div class="ui grid">
-  <div class="two wide column"></div>
-  <div class="one wide column"></div>
-  <div class="one wide column">
-    <div class="ui compact vertical labeled menu">
-      $for date in checked_dates:
-        <a class="item" id='button_$date'>$date</a>
+    <div class="ui grid">
+      <div class="two wide column"></div>
+        <div class="twelve wide column">
+          <div id="main" class="ui segment" style="height:400px">
+        </div>
+      </div>
+      <div class="two wide column"></div>
     </div>
-  </div>
-  <div class="nine wide column">
-    <div id="main" class="ui segment" style="height:400px">
-    </div>
-  </div>
-  <div class="three wide column"></div>
-</div>
 
-<script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
-<script type="text/javascript">
+<script src="http://echarts.baidu.com/build/dist/echarts.js" charset="UTF-8"></script>
+<script type="text/javascript" charset="UTF-8">
   require.config({
             paths: {
                 echarts: 'http://echarts.baidu.com/build/dist'
@@ -126,24 +118,15 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant,join
       function (ec) {
           // 基于准备好的dom，初始化echarts图表
           var myChart = ec.init(document.getElementById('main'));
-          var meaning=[]
-          for (var i=0;i<all_data[date].length;i++){
-            meaning.push(all_data[date][i][0].slice(0,4))
-          }
-          var meaning_data=[]
-          for (var i=0;i<all_data[date].length;i++){
-            meaning_data.push({value:all_data[date][i][1], name:all_data[date][i][0].slice(0,4)})
-          }
           var option = {
             title : {
-                text: '某楼盘销售情况',
-                subtext: '纯属虚构'
+                text: '$word'
             },
             tooltip : {
                 trigger: 'axis'
             },
             legend: {
-                data:['意向','预购','成交']
+                data:$:str_short_meaning
             },
             toolbox: {
                 show : true,
@@ -160,7 +143,7 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant,join
                 {
                     type : 'category',
                     boundaryGap : false,
-                    data : ['周一','周二','周三','周四','周五','周六','周日']
+                    data : $:checked_dates
                 }
             ],
             yAxis : [
@@ -169,31 +152,18 @@ $def with (dates,checked_dates,word,words,batch_distant,json_format_distant,join
                 }
             ],
             series : [
+              $for m in distribute:
                 {
-                    name:'成交',
+                    name:$:distribute[m]['str_meaning'],
                     type:'line',
                     smooth:true,
                     itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:[10, 12, 21, 54, 260, 830, 710]
+                    data:$:distribute[m]['data']
                 },
-                {
-                    name:'预购',
-                    type:'line',
-                    smooth:true,
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:[30, 182, 434, 791, 390, 30, 10]
-                },
-                {
-                    name:'意向',
-                    type:'line',
-                    smooth:true,
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data:[1320, 1132, 601, 234, 120, 90, 20]
-                }
             ]
-        }; 
-        // 为echarts对象加载数据 
-        myChart.setOption(option); 
+        };
+        // 为echarts对象加载数据
+        myChart.setOption(option);
       }
   );
 </script>

@@ -22,11 +22,12 @@ def get_word_meaning(date,word):
         for l in list_words:
             closest_words.append(l[i])
     closest_words=list(set(closest_words))
-    closest_words=zip(closest_words,map(lambda w:deliver.get_word_embedding(date,w),closest_words))
+    closest_words=zip(closest_words,map(lambda w:deliver.get_word_embedding('all',w),closest_words))
+    #closest_words=zip(closest_words,map(lambda w:deliver.get_word_embedding(date,w),closest_words))
     closest_words=filter(lambda w:not w[1] is None,closest_words)
     closest_words=filter(lambda w:not w[1]=='None',closest_words)
     X=numpy.array(map(lambda w:w[1],closest_words))
-    af = AffinityPropagation(preference=-30).fit(X)
+    af = AffinityPropagation(preference=-680).fit(X)
     labels = af.labels_
     meaning=dict()
     if True in numpy.isnan(labels):
@@ -94,15 +95,24 @@ def transfer_to_json(batch_distant):
     json_format_distant=json.dumps(batch_distant)
     return json_format_distant
 
-def transfer_to_line(batch_distant):
-    meaning=batch_distant[0].keys()
-    json_format_distant=json.dumps(batch_distant)
-    return json_format_distant
+def transfer_to_line(batch_distant,dates,meaning,count=3):
+    short_meaning=['\n'.join(m[:count]) for m in meaning]
+    distribute=dict()
+    for m in short_meaning:
+        distribute[m.encode('utf8')]={'str_meaning':json.dumps(m),'data':[0]*len(dates)}
+    for index,date in enumerate(dates):
+        for m,d in batch_distant[date]:
+            distribute['\n'.join(m[:count]).encode('utf8')]['data'][index]=d
+    return short_meaning,distribute
 
 def test():
     word=u'小米'
+    #word=u'沈阳'
     #word=u'第三者'
-    print get_batch_distant([2012],word)[2]
+    word=u'山寨'
+    dates=[2012]
+    bach,meaning=get_batch_distant(dates,word)
+    transfer_to_line(bach,dates,meaning)
 
 if __name__=='__main__':
     test()

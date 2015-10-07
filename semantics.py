@@ -3,6 +3,7 @@ import web
 from deliver import Deliver
 from helper import get_batch_distant
 from helper import transfer_to_json
+from helper import transfer_to_line
 import json
 
 render = web.template.render('templates/',base='layout')
@@ -15,7 +16,7 @@ deliver=Deliver()
 '''
 available_dates指当前可以获取的年份信息
 '''
-available_dates=[2005,2006,2007,2008,2009,2010,2011,2012]
+available_dates=[2005,2006,2007,2008,2009,2010,2011,2012,2013]
 available_dates=map(lambda d:str(d),available_dates)
 
 def get_intersection(words1,words2):
@@ -71,6 +72,7 @@ class semantics_show:
             words,collocation_result,intersection=words,collocation_result,[]
         batch_distant,meaning=get_batch_distant(checked_dates,word)
         json_format_distant=transfer_to_json(batch_distant)
+        short_meaning,distribute=transfer_to_line(batch_distant,checked_dates,meaning)
         if batch_distant is None:
             return render.error(info='None')
         words=dict(zip(checked_dates,words))
@@ -97,4 +99,7 @@ class semantics_show:
                 jointly_search=jointly_search,
                 collocation_result=collocation_result,
                 intersection=intersection,
+                str_short_meaning=json.dumps(short_meaning),
+                short_meaning=short_meaning,
+                distribute=distribute,
                 )

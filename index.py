@@ -4,6 +4,8 @@
 import web
 from semantics import semantics_index
 from semantics import semantics_show
+from catchwords import catchwords_index
+from catchwords import catchwords_show
 
 import os
 home=''
@@ -14,6 +16,8 @@ urls = (
     "/", "semantics_index",
     "/semantics", "semantics_index",
     "/semantics/show", "semantics_show",
+    "/catchwords", "catchwords_index",
+    "/catchwords/show", "catchwords_show",
     )
 app = web.application(urls, globals())
 
