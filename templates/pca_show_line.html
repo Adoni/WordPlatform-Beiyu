@@ -1,0 +1,98 @@
+$def with(dates,checked_dates,legend,data)
+</br>
+</br>
+</br>
+</br>
+<div class="ui page padded grid">
+  <div class="column">
+    <div class="ui grid">
+      <div class="three wide column"></div>
+      <div class="ui center aligned ten wide column">
+        <h1 class="ui header">词义检索</h1>
+        <form class="ui form" action="/pca/show" method="post">
+          <div class="ui fluid huge icon input">
+            <input type="text" name="words" placeholder="Word...">
+            <i class="search icon"></i>
+          </div>
+          <div class="ui four column center aligned stackable divided grid segment">
+            $for date in dates:
+              <div class="column">
+                <div class="ui toggle checkbox">
+                  $if date in checked_dates:
+                    <input type="checkbox" checked="checked" id="$date" name="$date">
+                  $else:
+                    <input type="checkbox" id="$date" name="$date">
+                  <label for="$date">$date</label>
+                </div>
+              </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="three wide column"></div>
+    </div>
+
+    <h4 class="ui horizontal header divider">
+      <i class="bar chart icon"></i>
+    </h4>
+  </div>
+</div>
+
+  <div class="ui grid">
+    <div class="three wide column"></div>
+    <div class="ten wide column">
+      <div id="main" class="ui segment">
+      </div>
+    </div>
+    <div class="three wide column"></div>
+  </div>
+
+<script src="http://echarts.baidu.com/build/dist/echarts.js" charset="UTF-8"></script>
+<script type="text/javascript" charset="UTF-8">
+  require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+  require(
+      [
+          'echarts',
+          'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+      ],
+      function (ec) {
+          // 基于准备好的dom，初始化echarts图表
+          var myChart = ec.init(document.getElementById('main'));
+          var option = {
+    legend: {
+        data:JSON.parse(legend)
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    tooltip : {
+        formatter: "坐标 : {c}"
+    },
+    xAxis : [
+        {
+            type : 'value',
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+        }
+    ],
+    series : JSON.parse(data)
+};
+        // 为echarts对象加载数据
+        myChart.setOption(option);
+      }
+  );
+</script>

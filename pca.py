@@ -64,6 +64,26 @@ def pca_plot(words,years):
     fig.savefig(buf, format='png')
     return base64.encodestring(buf.getvalue())
 
+def dump_pca_data(words,years):
+    data=[]
+    for index,w in enumerate(words):
+        word_data=dict()
+        w=w.encode('utf8')
+        word_data['name']=w
+        word_data['data']=[]
+        word_data['type']='line'
+        word_data['smooth']=True
+        for year in years:
+            pca_w=str(year)+w
+            if pca_w in embedding:
+                xy=embedding[pca_w]
+                word_data['data'].append([xy[0],xy[1]])
+            else:
+                print 'Not in year %s'%str(year)
+        data.append(word_data)
+    return json.dumps(words),json.dumps(data)
+
+
 class pca_index:
     def GET(self):
         return render.pca_index(dates=available_dates)
@@ -85,11 +105,18 @@ class pca_show:
             checked_dates=filter(lambda d:not deliver.get_word_embedding(d,word) is None,checked_dates)
         if checked_dates==[]:
             return render.error(info="Cannot find those in our corpus!")
-        fig=pca_plot(words,checked_dates)
+        # fig=pca_plot(words,checked_dates)
+        # return render.pca_show(
+        #         dates=available_dates,
+        #         checked_dates=checked_dates,
+        #         fig=fig
+        #         )
+        legend,data=dump_pca_data(words,checked_dates)
         return render.pca_show(
                 dates=available_dates,
                 checked_dates=checked_dates,
-                fig=fig
+                legend=ledend,
+                data=data,
                 )
 
 if __name__=='__main__':
