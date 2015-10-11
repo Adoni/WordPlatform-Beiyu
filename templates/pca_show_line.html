@@ -41,7 +41,7 @@ $def with(dates,checked_dates,legend,data)
   <div class="ui grid">
     <div class="three wide column"></div>
     <div class="ten wide column">
-      <div id="main" class="ui segment">
+      <div id="main" class="ui segment" style="height:400px">
       </div>
     </div>
     <div class="three wide column"></div>
@@ -64,7 +64,7 @@ $def with(dates,checked_dates,legend,data)
           var myChart = ec.init(document.getElementById('main'));
           var option = {
     legend: {
-        data:JSON.parse(legend)
+        data:JSON.parse('$:legend')
     },
     toolbox: {
         show : true,
@@ -77,6 +77,7 @@ $def with(dates,checked_dates,legend,data)
     },
     calculable : true,
     tooltip : {
+      show:false,
         formatter: "坐标 : {c}"
     },
     xAxis : [
@@ -89,7 +90,7 @@ $def with(dates,checked_dates,legend,data)
             type : 'value',
         }
     ],
-    series : JSON.parse(data)
+    series : JSON.parse('$:data')
 };
         // 为echarts对象加载数据
         myChart.setOption(option);

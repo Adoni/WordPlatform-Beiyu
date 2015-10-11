@@ -77,7 +77,14 @@ def dump_pca_data(words,years):
             pca_w=str(year)+w
             if pca_w in embedding:
                 xy=embedding[pca_w]
-                word_data['data'].append([xy[0],xy[1]])
+                d={
+                    'value':[xy[0],xy[1]],
+                    'tooltip':{
+                        'show':True,
+                        'formatter': str(year)
+                    },
+                }
+                word_data['data'].append(d)
             else:
                 print 'Not in year %s'%str(year)
         data.append(word_data)
@@ -112,12 +119,12 @@ class pca_show:
         #         fig=fig
         #         )
         legend,data=dump_pca_data(words,checked_dates)
-        return render.pca_show(
+        return render.pca_show_line(
                 dates=available_dates,
                 checked_dates=checked_dates,
-                legend=ledend,
+                legend=legend,
                 data=data,
                 )
 
 if __name__=='__main__':
-    print pca_plot(['中国'],[2005,2006,2007])
+    print dump_pca_data(['中国'],[2005,2006,2007])
