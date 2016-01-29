@@ -112,6 +112,7 @@ def test():
     word=u'山寨'
     dates=[2012]
     bach,meaning=get_batch_distant(dates,word)
+    print meaning
     transfer_to_line(bach,dates,meaning)
 
 if __name__=='__main__':

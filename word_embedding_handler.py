@@ -8,6 +8,7 @@ from settings import Embedding_Dir
 from settings import QUEUE_NAME
 from rpyc import Service
 from rpyc.utils.server import ThreadedServer
+import sys
 
 class word_handler():
     def __init__(self):
@@ -26,6 +27,7 @@ class word_handler():
             embedding_file_name="%s/%s/%s-embedding.data"%(Embedding_Dir,year,year)
         self.embeddings[date]=simple_embedding_cluster_viewer(embedding_file_name,'utf8')
         print 'Done'
+        sys.stdout.flush()
 
     def get_closest_words(self, dates, word, count=10):
         if type(word)==unicode:
@@ -69,9 +71,10 @@ class Listener(Service):
 global handler
 def main():
     global handler
+    open('./nohup.out','w').close()
     handler=word_handler()
     handler.add_embedding_file('all')
-    for date in xrange(2005,2013):
+    for date in xrange(2005,2014):
         handler.add_embedding_file(date)
     sr=ThreadedServer(Listener,port=22222,auto_register=False)
     sr.start()
